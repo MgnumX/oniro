@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070b16">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3edde">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>oniro · intérprete de sueños</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap">
+  <link rel="stylesheet" href="/styles.css?v=4">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <header class="brand">
+      <svg class="moon" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <radialGradient id="moon-g" cx="34%" cy="28%" r="80%">
+            <stop offset="0%" stop-color="#f8ecc8"/>
+            <stop offset="55%" stop-color="#e6c47e"/>
+            <stop offset="100%" stop-color="#c99a45"/>
+          </radialGradient>
+        </defs>
+        <path d="M43 4a28 28 0 1 0 0 56 22.5 22.5 0 0 1 0-56Z" fill="url(#moon-g)"/>
+        <circle cx="38" cy="20" r="3" fill="#8a6a2f" opacity="0.28"/>
+        <circle cx="46" cy="38" r="4.5" fill="#8a6a2f" opacity="0.2"/>
+      </svg>
+      <h1>oniro</h1>
+      <p class="tagline">Cuéntame lo que soñaste, te lo leo</p>
+    </header>
+
+    <section class="panel compose">
+      <label class="cap" for="input">El sueño de esta noche</label>
+      <textarea id="input" rows="4" maxlength="4000"
+        placeholder="Anoche soñé con…"></textarea>
+      <button id="send" disabled>Interpretar</button>
+      <p id="status" class="status" hidden></p>
+    </section>
+
+    <section id="list" class="list" aria-live="polite"></section>
+
+    <footer class="foot">oniro · tus sueños viven solo en este equipo</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/motion@13.1.0/dist/motion.js"></script>
+  <script src="/physics.js?v=4"></script>
+  <script src="/app.js?v=4"></script>
+</body>
+</html>

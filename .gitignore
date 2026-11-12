@@ -1,0 +1,32 @@
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local environment and personal data
+.env
+.env.*
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.mp3
+*.flac
+*.wav
+*.m4a
+*.ogg
+*.opus
+*.webm
+
+# Local agent/tool configuration; project specs remain included
+/.agents/
+/.claude/
+/.opencode/
+/.specify/
+/skills-lock.json

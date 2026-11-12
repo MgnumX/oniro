@@ -1,0 +1,387 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: light dark;
+  --bg: #070b16;
+  --ink: #e8e2d0;
+  --muted: #8f96ad;
+  --moon: #e3c177;
+  --moon-soft: rgba(227, 193, 119, 0.16);
+  --moon-edge: rgba(227, 193, 119, 0.32);
+  --surface: rgba(17, 24, 42, 0.74);
+  --surface-solid: #11182a;
+  --field: rgba(5, 8, 16, 0.55);
+  --star: #cdd6ea;
+  --nebula-a: rgba(44, 62, 105, 0.4);
+  --nebula-b: rgba(30, 42, 74, 0.35);
+  --danger: #e5484d;
+  --danger-soft: rgba(229, 72, 77, 0.14);
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f3edde;
+    --ink: #232838;
+    --muted: #6b7283;
+    --moon: #a8823f;
+    --moon-soft: rgba(168, 130, 63, 0.12);
+    --moon-edge: rgba(168, 130, 63, 0.35);
+    --surface: rgba(255, 252, 243, 0.8);
+    --surface-solid: #fbf7ec;
+    --field: rgba(35, 40, 56, 0.05);
+    --star: #c9bda2;
+    --nebula-a: rgba(214, 191, 138, 0.28);
+    --nebula-b: rgba(188, 160, 100, 0.2);
+    --danger: #c93036;
+    --danger-soft: rgba(201, 48, 54, 0.1);
+    --shadow: rgba(60, 48, 20, 0.14);
+  }
+}
+
+html { font-size: 17px; }
+
+body {
+  font: 17px/1.6 "Instrument Sans", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+/* Grano de película */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection { background: var(--moon); color: var(--bg); }
+
+:focus-visible {
+  outline: 2px solid var(--moon);
+  outline-offset: 3px;
+}
+
+/* Noche: nebulosas azul petróleo + estrellas que parpadean */
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1100px 620px at 82% -8%, var(--nebula-a), transparent 62%),
+    radial-gradient(860px 540px at 8% 2%, var(--nebula-b), transparent 58%),
+    radial-gradient(640px 420px at 55% 115%, var(--nebula-b), transparent 62%),
+    radial-gradient(1.5px 1.5px at 22% 24%, var(--star), transparent),
+    radial-gradient(1px 1px at 68% 16%, var(--star), transparent),
+    radial-gradient(2px 2px at 46% 41%, var(--star), transparent),
+    radial-gradient(1px 1px at 86% 46%, var(--star), transparent),
+    radial-gradient(1px 1px at 13% 62%, var(--star), transparent),
+    radial-gradient(1.5px 1.5px at 62% 72%, var(--star), transparent),
+    radial-gradient(1px 1px at 91% 82%, var(--star), transparent),
+    radial-gradient(1.5px 1.5px at 34% 80%, var(--star), transparent),
+    var(--bg);
+  transition: background 300ms ease;
+}
+.sky::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1.5px 1.5px at 30% 14%, var(--star), transparent),
+    radial-gradient(1px 1px at 55% 52%, var(--star), transparent),
+    radial-gradient(2px 2px at 76% 64%, var(--star), transparent),
+    radial-gradient(1px 1px at 41% 88%, var(--star), transparent);
+  animation: twinkle 4.2s ease-in-out infinite;
+}
+.sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1.5px 1.5px at 64% 32%, var(--star), transparent),
+    radial-gradient(1px 1px at 16% 76%, var(--star), transparent),
+    radial-gradient(2px 2px at 88% 12%, var(--star), transparent),
+    radial-gradient(1px 1px at 28% 46%, var(--star), transparent);
+  animation: twinkle 5.1s ease-in-out 1.6s infinite;
+}
+@keyframes twinkle { 50% { opacity: 0.3; } }
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 36px) 20px calc(env(safe-area-inset-bottom) + 24px);
+}
+
+/* Marca: luna dorada + serif editorial */
+.brand { text-align: center; margin-bottom: 34px; }
+
+.moon {
+  width: 76px;
+  height: 76px;
+  filter: drop-shadow(0 0 30px var(--moon-soft)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4));
+  animation: float 7s ease-in-out infinite;
+}
+@keyframes float { 50% { transform: translateY(-5px); } }
+
+.brand h1 {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(2.9rem, 11vw, 4.2rem);
+  font-weight: 780;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-optical-sizing: auto;
+  margin-top: 12px;
+  background: linear-gradient(180deg, #f5ead0 20%, var(--moon) 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Composición: ficha de diario */
+.panel {
+  background: var(--surface);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid var(--moon-edge);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 24px 70px var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.cap {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--moon);
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  background: var(--field);
+  border: 1px solid var(--moon-edge);
+  border-radius: 16px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 14px 16px;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+textarea::placeholder { color: var(--muted); }
+textarea:focus {
+  border-color: var(--moon);
+  box-shadow: 0 0 0 3px var(--moon-soft);
+}
+
+button {
+  min-height: 48px;
+  margin-top: 14px;
+  padding: 16px 24px;
+  font: inherit;
+  font-weight: 650;
+  font-size: 16px;
+  color: var(--bg);
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f2dcab, var(--moon) 60%);
+  cursor: pointer;
+  box-shadow: 0 10px 32px var(--moon-soft);
+  transition: transform 100ms ease-out, opacity 200ms ease, filter 200ms ease, box-shadow 200ms ease;
+}
+button:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 14px 40px var(--moon-soft);
+}
+button:active { transform: scale(0.97); }
+button:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+.status {
+  margin-top: 14px;
+  color: var(--moon);
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+.status.error {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-style: normal;
+  animation: none;
+}
+@keyframes pulse { 50% { opacity: 0.4; } }
+
+/* Diario de sueños */
+.list { display: grid; gap: 16px; margin-top: 30px; }
+
+.dream {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.swipe-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 24px;
+  background: var(--danger);
+  color: #fff;
+  font-weight: 650;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+
+.dream-card {
+  position: relative;
+  background: var(--surface);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid var(--moon-edge);
+  border-radius: 20px;
+  padding: 18px 20px;
+  will-change: transform;
+  touch-action: pan-y;
+  box-shadow: 0 14px 44px var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: box-shadow 250ms ease, border-color 250ms ease;
+}
+.dream-card:hover {
+  box-shadow: 0 20px 60px var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-color: var(--moon);
+}
+
+.dream .meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.dream .meta .date { color: var(--moon); }
+
+.dream .text {
+  white-space: pre-wrap;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 17px;
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+
+.interpret {
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  border-top: 1px solid var(--moon-edge);
+  padding-top: 14px;
+  margin-top: 2px;
+}
+.interpret p { margin: 0 0 8px; }
+.interpret p:last-child { margin-bottom: 0; }
+
+.actions { display: flex; gap: 10px; margin-top: 16px; }
+.actions button {
+  min-height: 40px;
+  margin: 0;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  width: auto;
+  background: var(--field);
+  color: var(--ink);
+  box-shadow: none;
+}
+.actions button:hover { border: 1px solid var(--moon); }
+.actions button.danger { color: var(--danger); }
+.actions button.confirm {
+  background: var(--danger);
+  color: #fff;
+}
+
+.pending-hint {
+  color: var(--moon);
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 12px;
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  margin-top: 48px;
+  font-size: 15px;
+  line-height: 1.8;
+}
+.empty::before {
+  content: "☾";
+  display: block;
+  font-size: 30px;
+  color: var(--moon);
+  margin-bottom: 10px;
+}
+
+.foot {
+  margin-top: 48px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky::before, .sky::after, .moon { animation: none; }
+  .status { animation: none; }
+  button { transition: opacity 200ms ease; }
+  button:active { transform: none; }
+  .swipe-bg { display: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .panel, .dream-card {
+    background: var(--surface-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .panel, .dream-card {
+    background: var(--surface-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: var(--ink);
+  }
+}
