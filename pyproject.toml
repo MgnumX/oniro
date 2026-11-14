@@ -1,7 +1,7 @@
 [project]
 name = "oniro"
 version = "0.1.0"
-description = "Intérprete de sueños como microservicio SaaS"
+description = "Diario web local de sueños con interpretación opcional por LLM"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115",

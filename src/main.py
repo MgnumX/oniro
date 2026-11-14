@@ -1,10 +1,15 @@
+import logging
+from datetime import datetime, timezone
+
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from src import db, llm
 
 app = FastAPI(title="oniro")
+logger = logging.getLogger(__name__)
 
 
 class DreamIn(BaseModel):
@@ -26,8 +31,9 @@ def create_dream(payload: DreamIn):
     dream_id = db.create_dream(text)
     try:
         db.set_interpretation(dream_id, llm.interpret(text))
-    except Exception:
-        pass
+    except Exception as e:
+        # El sueño se guarda igual; el texto no va al log.
+        logger.warning("Interpretación falló para el sueño %s: %s", dream_id, e)
     return _as_dict(dream_id)
 
 
@@ -41,6 +47,21 @@ def reinterpret(dream_id: int):
 @app.get("/api/dreams")
 def get_dreams():
     return db.list_dreams()
+
+
+@app.get("/api/dreams/export")
+def export_dreams():
+    # Declarada antes de /{dream_id}: si no, FastAPI intenta parsear "export".
+    dreams = db.list_dreams()[::-1]  # ascendente por id
+    payload = {
+        "version": 1,
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+        "dreams": dreams,
+    }
+    return JSONResponse(
+        payload,
+        headers={"Content-Disposition": 'attachment; filename="oniro-suenos.json"'},
+    )
 
 
 @app.get("/api/dreams/{dream_id}")

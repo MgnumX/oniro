@@ -1,7 +1,7 @@
-const CACHE = "oniro-v6";
+const CACHE = "oniro-v7";
 const SHELL = [
   "/",
-  "/styles.css?v=4",
+  "/styles.css?v=5",
   "/app.js?v=5",
   "/physics.js?v=5",
   "/vendor/motion.js",
@@ -21,13 +21,16 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 self.addEventListener("fetch", (e) => {
-  if (e.request.method !== "GET") return;
+  const url = new URL(e.request.url);
+  if (e.request.method !== "GET" || url.origin !== self.location.origin) return;
+  // /api son datos vivos: si se cachean, la lista de sueños queda vieja.
+  if (url.pathname.startsWith("/api/")) return;
   e.respondWith(
     caches.match(e.request).then(
       (hit) =>
         hit ||
         fetch(e.request).then((resp) => {
-          if (e.request.url.startsWith(self.location.origin)) {
+          if (resp.ok) {
             const copy = resp.clone();
             caches.open(CACHE).then((c) => c.put(e.request, copy));
           }

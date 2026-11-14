@@ -6,7 +6,7 @@ Los sueños quedan en un archivo SQLite local: no hay cuentas ni servidor extern
 
 ## Stack
 
-Python 3.11+, FastAPI, Uvicorn, SQLite y JavaScript sin framework. Motion va vendorizado en `web/vendor/`, así que la interfaz no depende de un CDN para animarse. Las tipografías se cargan de Google Fonts y caen a fuentes del sistema sin red; el service worker cachea el shell para uso sin conexión.
+Python 3.11+, FastAPI, Uvicorn, SQLite y JavaScript sin framework. Motion va vendorizado en `web/vendor/`, así que la interfaz no depende de un CDN para animarse. Las tipografías se cargan de Google Fonts y caen a fuentes del sistema sin red; el service worker cachea el shell para uso sin conexión y nunca cachea `/api`, para no mostrar sueños viejos.
 
 ## Ejecutar
 
@@ -19,7 +19,7 @@ uv run uvicorn src.main:app --reload
 
 Abre `http://127.0.0.1:8000`. Config opcional: `ONIRO_LLM_BASE`, `ONIRO_MODEL`, `ONIRO_API_KEY` y `ONIRO_DB`. La base predeterminada es `oniro.db`; queda local y está excluida de Git.
 
-La API expone `POST /api/dreams`, `GET /api/dreams`, `GET /api/dreams/{id}`, `POST /api/dreams/{id}/interpret` y `DELETE /api/dreams/{id}`. La interfaz web usa esos mismos endpoints.
+La API expone `POST /api/dreams`, `GET /api/dreams`, `GET /api/dreams/export`, `GET /api/dreams/{id}`, `POST /api/dreams/{id}/interpret` y `DELETE /api/dreams/{id}`. La interfaz web usa esos mismos endpoints. `GET /api/dreams/export` descarga todos los sueños en JSON; el enlace está en el pie de la página.
 
 ## Ejemplo de salida
 
@@ -37,7 +37,7 @@ Con un modelo real, la interpretación depende de su respuesta.
 
 ## Estado
 
-MVP funcional: crear, listar, interpretar y borrar sueños, PWA con caché offline y tests de API con el LLM simulado. No tiene autenticación ni soporte multiusuario; está pensado para uso local.
+MVP funcional: crear, listar, interpretar, exportar y borrar sueños, PWA con caché offline y tests de API con el LLM simulado. No tiene autenticación ni soporte multiusuario; está pensado para uso local.
 
 ## Tests
 

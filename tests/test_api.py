@@ -38,12 +38,32 @@ def test_sueno_vacio_rechazado(client):
     assert client.post("/api/dreams", json={"text": "   "}).status_code == 400
 
 
-def test_llm_caido_guarda_sueno_sin_interpretacion(client, monkeypatch):
+def test_llm_caido_guarda_sueno_sin_interpretacion(client, monkeypatch, caplog):
     def falla(text):
         raise OSError("LLM no disponible")
 
     monkeypatch.setattr("src.main.llm.interpret", falla)
-    r = client.post("/api/dreams", json={"text": "Soñé con una puerta abierta"})
+    with caplog.at_level("WARNING", logger="src.main"):
+        r = client.post("/api/dreams", json={"text": "Soñé con una puerta abierta"})
     assert r.status_code == 201
     assert r.json()["interpretation"] is None
     assert client.get("/api/dreams").json()[0]["interpretation"] is None
+    assert "sueño" in caplog.text
+    assert "puerta abierta" not in caplog.text
+
+
+def test_export_json_ascendente(client):
+    ids = [
+        client.post("/api/dreams", json={"text": f"sueño {i}"}).json()["id"]
+        for i in range(3)
+    ]
+    r = client.get("/api/dreams/export")
+    assert r.status_code == 200
+    assert "attachment" in r.headers["content-disposition"]
+    data = r.json()
+    assert data["version"] == 1
+    assert [d["id"] for d in data["dreams"]] == ids
+
+
+def test_export_vacio(client):
+    assert client.get("/api/dreams/export").json()["dreams"] == []
