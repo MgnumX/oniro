@@ -4,7 +4,7 @@ Diario web de sueños con API FastAPI, almacenamiento local SQLite e interpretac
 
 ## Stack
 
-Python 3.11+, FastAPI, Uvicorn, SQLite y JavaScript sin framework.
+Python 3.11+, FastAPI, Uvicorn, SQLite y JavaScript sin framework. Motion va vendorizado en `web/vendor/`, así que la interfaz no depende de CDN; el service worker cachea el shell para uso sin conexión.
 
 ## Ejecutar
 

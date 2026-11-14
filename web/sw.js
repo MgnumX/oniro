@@ -1,12 +1,12 @@
-const CACHE = "oniro-v4";
+const CACHE = "oniro-v6";
 const SHELL = [
   "/",
   "/styles.css?v=4",
-  "/app.js?v=4",
-  "/physics.js?v=4",
+  "/app.js?v=5",
+  "/physics.js?v=5",
+  "/vendor/motion.js",
   "/manifest.json",
   "/icon.svg",
-  "https://cdn.jsdelivr.net/npm/motion@13.1.0/dist/motion.js",
 ];
 
 self.addEventListener("install", (e) => {

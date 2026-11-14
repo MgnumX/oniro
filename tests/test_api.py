@@ -36,3 +36,14 @@ def test_flujo_completo(client):
 
 def test_sueno_vacio_rechazado(client):
     assert client.post("/api/dreams", json={"text": "   "}).status_code == 400
+
+
+def test_llm_caido_guarda_sueno_sin_interpretacion(client, monkeypatch):
+    def falla(text):
+        raise OSError("LLM no disponible")
+
+    monkeypatch.setattr("src.main.llm.interpret", falla)
+    r = client.post("/api/dreams", json={"text": "Soñé con una puerta abierta"})
+    assert r.status_code == 201
+    assert r.json()["interpretation"] is None
+    assert client.get("/api/dreams").json()[0]["interpretation"] is None

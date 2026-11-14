@@ -234,3 +234,7 @@ $list.addEventListener("click", (e) => {
 });
 
 render();
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js").catch(() => {});
+}
