@@ -120,7 +120,10 @@ body::after {
 .wrap {
   max-width: 640px;
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top) + 36px) 20px calc(env(safe-area-inset-bottom) + 24px);
+  padding: calc(env(safe-area-inset-top) + 36px)
+    max(20px, env(safe-area-inset-right))
+    calc(env(safe-area-inset-bottom) + 24px)
+    max(20px, env(safe-area-inset-left));
 }
 
 /* Marca: luna dorada + serif editorial */
@@ -222,12 +225,14 @@ button:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 
 .status {
   margin-top: 14px;
+  min-height: 1.6em;
   color: var(--moon);
   font-size: 14px;
   font-style: italic;
   text-align: center;
   animation: pulse 1.6s ease-in-out infinite;
 }
+.status.done { animation: none; }
 .status.error {
   color: var(--danger);
   background: var(--danger-soft);

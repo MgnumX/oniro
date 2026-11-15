@@ -6,10 +6,19 @@ const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const SP = { type: "spring", bounce: 0, duration: 0.4 };
 const { rubberband, shouldCommit } = window.oniroPhysics;
 
+let statusTimer;
+
 function setStatus(msg, isError) {
+  clearTimeout(statusTimer);
   $status.textContent = msg || "";
-  $status.hidden = !msg;
   $status.classList.toggle("error", !!isError);
+  $status.classList.remove("done");
+}
+
+function announce(msg) {
+  setStatus(msg);
+  $status.classList.add("done");
+  statusTimer = setTimeout(() => setStatus(""), 3000);
 }
 
 function esc(s) {
@@ -149,7 +158,10 @@ function swipeCard(card) {
           velocity: vel,
           onComplete: () => {
             fetch(`/api/dreams/${dream.dataset.id}`, { method: "DELETE" })
-              .then(render)
+              .then(() => {
+                announce("Sueño borrado.");
+                render();
+              })
               .catch(() => setStatus("No se pudo borrar el sueño.", true));
           },
         }
@@ -187,7 +199,7 @@ function sendDream() {
     })
     .then(() => {
       if (navigator.vibrate) navigator.vibrate(10);
-      setStatus("");
+      announce("Sueño guardado.");
       render();
     })
     .catch(() => setStatus("No se pudo interpretar el sueño. ¿Está Ollama corriendo?", true))
@@ -228,7 +240,10 @@ $list.addEventListener("click", (e) => {
       ? fetch(`/api/dreams/${id}`, { method: "DELETE" })
       : fetch(`/api/dreams/${id}/interpret`, { method: "POST" });
   arg
-    .then(render)
+    .then(() => {
+      announce(act === "del" ? "Sueño borrado." : "Sueño reinterpretado.");
+      render();
+    })
     .catch(() => setStatus(act === "del" ? "No se pudo borrar el sueño." : "No se pudo reinterpretar.", true))
     .finally(() => (btn.disabled = false));
 });

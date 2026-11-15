@@ -1,8 +1,8 @@
-const CACHE = "oniro-v7";
+const CACHE = "oniro-v8";
 const SHELL = [
   "/",
-  "/styles.css?v=5",
-  "/app.js?v=5",
+  "/styles.css?v=6",
+  "/app.js?v=6",
   "/physics.js?v=5",
   "/vendor/motion.js",
   "/manifest.json",
